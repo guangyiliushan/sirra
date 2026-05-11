@@ -1,0 +1,21 @@
+{
+  "name": "@sirra/core",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "types": "./src/index.ts",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "dependencies": {
+    "@sirra/shared": "workspace:*"
+  }
+}
