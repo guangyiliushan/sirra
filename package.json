@@ -1,21 +1,24 @@
 {
   "name": "sirra",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "Sirra monorepo workspace",
   "scripts": {
-    "dev": "pnpm --dir apps/web dev",
-    "build": "pnpm --dir apps/web build",
-    "preview": "pnpm --dir apps/web preview",
-    "astro": "pnpm --dir apps/web astro",
-    "check": "pnpm --dir apps/web astro check"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "lint": "turbo lint",
+    "format": "turbo format",
+    "typecheck": "turbo typecheck"
   },
-  "keywords": [
-    "pnpm",
-    "workspace",
-    "astro",
-    "starlight"
-  ],
-  "license": "AGPL-3.0-only",
-  "packageManager": "pnpm@10.33.3"
+  "devDependencies": {
+    "prettier": "^3.8.1",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "turbo": "^2.8.17",
+    "typescript": "5.9.3"
+  },
+  "packageManager": "pnpm@10.33.4",
+  "engines": {
+    "node": ">=22"
+  }
 }
