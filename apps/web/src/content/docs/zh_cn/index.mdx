@@ -1,0 +1,70 @@
+---
+title: Sirra 知识库
+description: 个人知识库 -- 技术文档、学习笔记与知识点整理
+draft: false
+tableOfContents: false
+lastUpdated: 2026-05-26
+category: 首页
+tags: ["开始", "引导"]
+author: guangyiliushan
+---
+
+import CategoryCards from "@/components/docs/CategoryCards.astro"
+import RecentDocs from "@/components/docs/RecentDocs.astro"
+
+## 欢迎来到 Sirra 知识库
+
+这里是我整理的技术文档、学习笔记与知识点归档。涵盖数学、计算机科学、物理、生物、化学、语言学习等领域，以系统化的方式呈现知识结构，帮助快速定位和深入学习。
+
+### 领域导航
+
+<CategoryCards
+  categories={[
+    {
+      title: "数学",
+      description: "微积分、线性代数、概率论、数理统计与离散数学",
+      href: "/zh_cn/math",
+    },
+    {
+      title: "计算机科学",
+      description: "算法、数据结构、编程语言、系统设计与架构",
+      href: "/zh_cn/computer-science",
+    },
+    {
+      title: "物理",
+      description: "经典力学、电磁学、热力学、量子力学与相对论",
+      href: "/zh_cn/physics",
+    },
+    {
+      title: "生物",
+      description: "分子生物学、遗传学、生物化学与生态学",
+      href: "/zh_cn/biology",
+    },
+    {
+      title: "化学",
+      description: "有机化学、无机化学、物理化学与分析化学",
+      href: "/zh_cn/chemistry",
+    },
+    {
+      title: "语言",
+      description: "英语、日语等语言学习笔记与资源整理",
+      href: "/zh_cn/language",
+    },
+  ]}
+/>
+
+### 内容分类
+
+本知识库中的内容按类型分为三类：
+
+- **文档**：系统性技术文档与参考手册，适合按顺序阅读的完整资料
+- **笔记**：学习过程中的记录与总结，包含个人理解与注解
+- **知识点**：独立的知识条目，适合快速查阅的短篇内容
+
+### 最近更新
+
+<RecentDocs locale="zh-CN" limit={6} />
+
+:::tip
+本知识库持续更新中。可以通过左侧边栏浏览各分类目录，或使用页面顶部的搜索功能快速查找内容。
+:::

@@ -1,12 +1,129 @@
 ---
 import Main from "@/layouts/main.astro"
-import AboutContent from "@/components/about-content"
+import Icon from "@/components/common/Icon.astro"
+import { techStack } from "@workspace/ui/data/tech-stack"
 ---
 
 <Main
   title="About — Sirra"
   description="About me and this project — a personal knowledge lab built with Astro, Starlight, and shadcn/ui."
 >
-  <AboutContent client:load />
-</Main>
+  <section class="mx-auto max-w-3xl px-4 pt-28 pb-12 text-center">
+    <div class="mx-auto mb-6 flex size-20 items-center justify-center rounded-full bg-muted text-muted-foreground">
+      <Icon name="user" class="size-9" />
+    </div>
+    <h1 class="text-4xl font-extrabold tracking-tight">About</h1>
 
+    <div class="mx-auto mt-6 flex max-w-3xl flex-col gap-6 leading-relaxed">
+      <div>
+        <p class="text-lg font-medium text-foreground">
+          A flash of insight outweighs a thousand memorizations.
+        </p>
+        <p class="text-sm text-muted-foreground/70">一瞬の理解は、千の暗記に勝る。</p>
+      </div>
+
+      <div class="space-y-1 text-muted-foreground">
+        <p>Hi, I&apos;m guangyiliushan, a CS undergrad exploring frameworks, architectures, and grinding algorithms.</p>
+        <p class="text-sm text-muted-foreground/70">こんにちは、guangyiliushanです。CS専攻の学生として、フレームワークやアーキテクチャを探求し、アルゴリズムを磨いています。</p>
+        <p class="text-sm text-muted-foreground/70">我是 guangyiliushan，一名计科本科生。正在探索框架与架构，在 LeetCode 和洛谷中打磨算法。</p>
+      </div>
+
+      <div class="space-y-1 text-muted-foreground">
+        <p>This is a personal knowledge hub fueled by curiosity — bridging the gap between &ldquo;knowing&rdquo; and &ldquo;understanding&rdquo;.</p>
+        <p class="text-sm text-muted-foreground/70">ここは好奇心で動く個人のナレッジベースです。「知る」から「理解する」への架け橋を目指します。</p>
+        <p class="text-sm text-muted-foreground/70">这是一个由好奇心驱动的个人笔记站。跨越「知道」与「懂得」的鸿沟。</p>
+      </div>
+
+      <p class="text-sm text-muted-foreground">
+        Hope it sparks your epiphany too. Got ideas?{" "}
+        <a href="/sponsor" class="underline underline-offset-2 hover:text-foreground transition-colors">
+          Join me
+        </a>
+        .
+      </p>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 py-12">
+    <div class="mb-10">
+      <h2 class="text-3xl font-bold tracking-tight">Tech Stack</h2>
+      <p class="mt-2 text-sm text-muted-foreground">
+        How this site is built · このサイトの構築方法 · 本站技术架构
+      </p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {techStack.map((group) => (
+        <div class="flex flex-col">
+          <h3 class="mb-4 text-xs font-semibold tracking-wider text-muted-foreground uppercase">
+            {group.category}
+          </h3>
+          <div class="flex flex-1 flex-col gap-3">
+            {group.items.map((item) => (
+              <a
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group flex flex-1 items-center gap-3 rounded-xl border border-border bg-card p-4 text-sm transition-all hover:-translate-y-0.5 hover:shadow-sm"
+              >
+                <span class="shrink-0 font-medium text-foreground group-hover:text-primary transition-colors">
+                  {item.name}
+                </span>
+                <span class="line-clamp-2 text-xs text-muted-foreground/70">
+                  {item.desc}
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-6xl px-4 py-12">
+    <div class="mb-10">
+      <h2 class="text-3xl font-bold tracking-tight">Links</h2>
+      <p class="mt-2 text-sm text-muted-foreground">
+        Get in touch · 連絡先 · 联系方式
+      </p>
+    </div>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <a
+        href="https://github.com/guangyiliushan"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex items-start gap-4 rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-0.5 hover:shadow-sm"
+      >
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+          <Icon name="external-link" class="size-5" />
+        </div>
+        <div class="flex flex-col">
+          <h3 class="font-semibold">GitHub</h3>
+          <div class="mt-1 text-sm text-muted-foreground">@guangyiliushan</div>
+        </div>
+      </a>
+
+      <a
+        href="mailto:hello@example.com"
+        class="flex items-start gap-4 rounded-2xl border border-border bg-card p-5 transition-all hover:-translate-y-0.5 hover:shadow-sm"
+      >
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-muted text-muted-foreground">
+          <Icon name="mail" class="size-5" />
+        </div>
+        <div class="flex flex-col">
+          <h3 class="font-semibold">Email</h3>
+          <div class="mt-1 text-sm text-muted-foreground">hello@example.com</div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer class="border-t border-border px-4 py-12 text-center">
+    <p class="text-sm text-muted-foreground">
+      This site is powered by <a href="/sponsor" class="underline underline-offset-2 hover:text-foreground transition-colors">your support</a>.
+    </p>
+    <p class="mt-1 text-xs text-muted-foreground/60">
+      このサイトは<a href="/sponsor" class="underline underline-offset-2 hover:text-foreground transition-colors">あなたのサポート</a>で運営されています。
+    </p>
+  </footer>
+</Main>

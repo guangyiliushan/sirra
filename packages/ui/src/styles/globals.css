@@ -4,6 +4,7 @@
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/noto-sans-sc";
 @import "@fontsource-variable/noto-sans-jp";
+@import "@astrojs/starlight-tailwind";
 
 @custom-variant dark (&:is(.dark *));
 @source "../../../apps/**/*.{ts,tsx,astro}";

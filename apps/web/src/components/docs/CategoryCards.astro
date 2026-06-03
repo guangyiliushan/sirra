@@ -1,0 +1,50 @@
+---
+interface Category {
+  title: string
+  description: string
+  href: string
+  icon?: string
+}
+
+interface Props {
+  categories: Category[]
+}
+
+const { categories } = Astro.props
+---
+
+<div class="not-content">
+  <div
+    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;"
+  >
+    {
+      categories.map((cat) => (
+        <a
+          href={cat.href}
+          style="
+            display: flex; flex-direction: column; gap: 0.5rem;
+            padding: 1.25rem; border-radius: 8px;
+            text-decoration: none;
+            border: 1px solid var(--sl-color-gray-5);
+            background: var(--sl-color-gray-7);
+            transition: border-color 0.2s, background 0.2s;
+          "
+        >
+          <span style="font-size: 1.1rem; font-weight: 600;">
+            {cat.title}
+          </span>
+          <span style="font-size: 0.85rem; color: var(--sl-color-gray-2); line-height: 1.5;">
+            {cat.description}
+          </span>
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  a:hover {
+    border-color: var(--sl-color-accent) !important;
+    background: var(--sl-color-gray-6) !important;
+  }
+</style>

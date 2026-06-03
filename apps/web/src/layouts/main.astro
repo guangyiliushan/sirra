@@ -1,6 +1,5 @@
 ---
 import "@workspace/ui/globals.css"
-import { ThemeProvider } from "@workspace/ui/components/theme-provider"
 import AppHeader from "@/components/app-header"
 
 interface Props {
@@ -23,17 +22,17 @@ const { title, description } = Astro.props
         <meta name="description" content={description} />
       )
     }
+    <script is:inline>
+      const theme = (() => {
+        const stored = localStorage?.getItem("theme");
+        if (stored === "dark" || stored === "light") return stored;
+        return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      })();
+      document.documentElement.classList.toggle("dark", theme === "dark");
+    </script>
   </head>
   <body class="min-h-screen bg-background text-foreground antialiased">
-    <ThemeProvider
-      client:load
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <AppHeader client:load />
-      <slot />
-    </ThemeProvider>
+    <AppHeader client:load />
+    <slot />
   </body>
 </html>

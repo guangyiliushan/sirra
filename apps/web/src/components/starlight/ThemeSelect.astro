@@ -1,0 +1,112 @@
+---
+import Icon from "@/components/common/Icon.astro"
+---
+
+<starlight-theme-select>
+  <div class="theme-wrapper">
+    <button
+      type="button"
+      class="theme-trigger"
+      aria-label="Toggle theme"
+    >
+      <Icon name="sun" class="sun-icon" size={16} />
+      <Icon name="moon" class="moon-icon" size={16} />
+    </button>
+  </div>
+</starlight-theme-select>
+
+<style>
+  .theme-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .theme-trigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 1.5rem;
+    color: var(--sl-color-gray-2);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+  }
+
+  .theme-trigger:hover {
+    color: var(--sl-color-white);
+    background: var(--sl-color-gray-6);
+  }
+
+  .sun-icon,
+  .moon-icon {
+    position: absolute;
+    transition: transform 0.3s, opacity 0.3s;
+  }
+
+  .sun-icon {
+    transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+
+  .moon-icon {
+    transform: rotate(-90deg) scale(0);
+    opacity: 0;
+  }
+
+  :global([data-theme="dark"]) .sun-icon {
+    transform: rotate(90deg) scale(0);
+    opacity: 0;
+  }
+
+  :global([data-theme="dark"]) .moon-icon {
+    transform: rotate(0) scale(1);
+    opacity: 1;
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = "starlight-theme"
+
+  function getSystemTheme(): "dark" | "light" {
+    return matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark"
+  }
+
+  function getStoredTheme(): "dark" | "light" | "auto" {
+    const stored = localStorage?.getItem(STORAGE_KEY)
+    if (stored === "dark" || stored === "light" || stored === "auto") return stored
+    return "auto"
+  }
+
+  function applyTheme(theme: "dark" | "light" | "auto") {
+    const effective = theme === "auto" ? getSystemTheme() : theme
+    document.documentElement.dataset.theme = effective
+    document.documentElement.classList.toggle("dark", effective === "dark")
+  }
+
+  function toggleTheme() {
+    const current = getStoredTheme()
+    const effective = current === "auto" ? getSystemTheme() : current
+    const next: "dark" | "light" = effective === "dark" ? "light" : "dark"
+    localStorage.setItem(STORAGE_KEY, next)
+    applyTheme(next)
+  }
+
+  class StarlightThemeSelect extends HTMLElement {
+    constructor() {
+      super()
+      applyTheme(getStoredTheme())
+      this.querySelector(".theme-trigger")?.addEventListener("click", toggleTheme)
+    }
+  }
+
+  customElements.define("starlight-theme-select", StarlightThemeSelect)
+
+  // 监听系统主题变化
+  matchMedia("(prefers-color-scheme: light)").addEventListener("change", () => {
+    if (getStoredTheme() === "auto") applyTheme("auto")
+  })
+</script>

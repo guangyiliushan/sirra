@@ -1,0 +1,70 @@
+---
+title: Sirra ナレッジベース
+description: 個人ナレッジベース -- 技術ドキュメント・学習ノート・知識ポイント
+draft: false
+tableOfContents: false
+lastUpdated: 2026-05-26
+category: ホーム
+tags: ["はじめに", "ガイド"]
+author: guangyiliushan
+---
+
+import CategoryCards from "@/components/docs/CategoryCards.astro"
+import RecentDocs from "@/components/docs/RecentDocs.astro"
+
+## Sirra ナレッジベースへようこそ
+
+ここは私が整理した技術ドキュメント、学習ノート、知識ポイントのアーカイブです。数学、計算機科学、物理、生物、化学、言語学習などの分野をカバーし、知識構造を体系的に提示することで、素早いアクセスと深い学習をサポートします。
+
+### 分野ナビゲーション
+
+<CategoryCards
+  categories={[
+    {
+      title: "数学",
+      description: "微積分、線形代数、確率論、数理統計学と離散数学",
+      href: "/ja/math",
+    },
+    {
+      title: "計算機科学",
+      description: "アルゴリズム、データ構造、プログラミング言語、システム設計とアーキテクチャ",
+      href: "/ja/computer-science",
+    },
+    {
+      title: "物理",
+      description: "古典力学、電磁気学、熱力学、量子力学と相対性理論",
+      href: "/ja/physics",
+    },
+    {
+      title: "生物",
+      description: "分子生物学、遺伝学、生化学と生態学",
+      href: "/ja/biology",
+    },
+    {
+      title: "化学",
+      description: "有機化学、無機化学、物理化学と分析化学",
+      href: "/ja/chemistry",
+    },
+    {
+      title: "言語",
+      description: "英語、日本語などの言語学習ノートとリソース",
+      href: "/ja/language",
+    },
+  ]}
+/>
+
+### コンテンツタイプ
+
+本ナレッジベースのコンテンツは以下の三種類に分類されます：
+
+- **ドキュメント**：体系的な技術文書とリファレンスマニュアル。順を追って読むのに適した完全な資料
+- **ノート**：学習過程での記録とまとめ。個人の理解と注釈を含む
+- **知識ポイント**：独立した知識項目。素早く参照するのに適した短いコンテンツ
+
+### 最近の更新
+
+<RecentDocs locale="ja" limit={6} />
+
+:::tip
+本ナレッジベースは継続的に更新中です。左側のサイドバーから各カテゴリを閲覧するか、ページ上部の検索機能で素早くコンテンツを見つけることができます。
+:::

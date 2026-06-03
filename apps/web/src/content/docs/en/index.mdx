@@ -1,0 +1,70 @@
+---
+title: Sirra Knowledge Base
+description: Personal knowledge base -- technical documentation, study notes and knowledge points
+draft: false
+tableOfContents: false
+lastUpdated: 2026-05-26
+category: Home
+tags: ["getting-started", "guide"]
+author: guangyiliushan
+---
+
+import CategoryCards from "@/components/docs/CategoryCards.astro"
+import RecentDocs from "@/components/docs/RecentDocs.astro"
+
+## Welcome to the Sirra Knowledge Base
+
+This is my curated collection of technical documentation, study notes, and knowledge points. Covering mathematics, computer science, physics, biology, chemistry, and language learning, the content is organized systematically to help you quickly locate and dive deeper into any topic.
+
+### Domain Navigation
+
+<CategoryCards
+  categories={[
+    {
+      title: "Mathematics",
+      description: "Calculus, linear algebra, probability theory, mathematical statistics and discrete mathematics",
+      href: "/en/math",
+    },
+    {
+      title: "Computer Science",
+      description: "Algorithms, data structures, programming languages, system design and architecture",
+      href: "/en/computer-science",
+    },
+    {
+      title: "Physics",
+      description: "Classical mechanics, electromagnetism, thermodynamics, quantum mechanics and relativity",
+      href: "/en/physics",
+    },
+    {
+      title: "Biology",
+      description: "Molecular biology, genetics, biochemistry and ecology",
+      href: "/biology",
+    },
+    {
+      title: "Chemistry",
+      description: "Organic chemistry, inorganic chemistry, physical chemistry and analytical chemistry",
+      href: "/en/chemistry",
+    },
+    {
+      title: "Language",
+      description: "English, Japanese and other language learning notes and resources",
+      href: "/en/language",
+    },
+  ]}
+/>
+
+### Content Types
+
+Content in this knowledge base is organized into three types:
+
+- **Docs**: Systematic technical documentation and reference manuals, suitable for sequential reading
+- **Notes**: Study records and summaries, including personal insights and annotations
+- **Knowledge Points**: Standalone knowledge entries, ideal for quick reference
+
+### Recent Updates
+
+<RecentDocs locale="en" limit={6} />
+
+:::tip
+This knowledge base is continuously updated. Browse categories via the sidebar or use the search bar at the top to quickly find content.
+:::

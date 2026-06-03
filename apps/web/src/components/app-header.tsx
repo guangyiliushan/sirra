@@ -5,44 +5,51 @@ import { ThemeToggle } from "@workspace/ui/components/theme-toggle"
 import { HeaderNav } from "@workspace/ui/components/header-nav"
 import { Button } from "@workspace/ui/components/button"
 import type { NavItem } from "@workspace/ui/components/header-nav"
-
-const navItemsBase: Omit<NavItem, "active">[] = [
-  { label: "Home", href: "/" },
-  {
-    label: "Subjects",
-    children: [
-      {
-        label: "Mathematics",
-        href: "/subjects/math",
-        description: "Calculus, Linear Algebra, Statistics",
-      },
-      {
-        label: "Computer Science",
-        href: "/subjects/cs",
-        description: "Algorithms, Data Structures, AI",
-      },
-      {
-        label: "More Subjects",
-        href: "/subjects/",
-        description: "",
-      },
-    ],
-  },
-  { label: "About", href: "/about" },
-  { label: "Sponsor", href: "/sponsor" },
-]
+import { subjectLinks } from "@workspace/ui/data/subjects"
 
 function useActiveNavItems(): NavItem[] {
   const pathname = React.useSyncExternalStore(
-    () => () => {}, // subscribe - no-op since we don't need updates
-    () => window.location.pathname, // getSnapshot on client
-    () => "/" // getServerSnapshot - fallback for SSR
+    () => () => {},
+    () => window.location.pathname,
+    () => "/"
   )
 
-  return navItemsBase.map((item) => ({
-    ...item,
-    active: item.href === pathname || (item.href !== "/" && pathname.startsWith(item.href ?? "")),
-  }))
+  const localePrefix = pathname.startsWith("/zh-cn/")
+    ? "/zh-cn"
+    : pathname.startsWith("/ja/")
+      ? "/ja"
+      : pathname.startsWith("/en/")
+        ? "/en"
+        : "/en"
+
+  const children = React.useMemo(
+    () => {
+      const prefix = localePrefix
+      return subjectLinks.map((s) => ({
+        ...s,
+        href: `${prefix}${s.href}`,
+      }))
+    },
+    [localePrefix]
+  )
+
+  return [
+    { label: "Home", href: "/", active: pathname === "/" },
+    {
+      label: "Subjects",
+      children,
+    },
+    {
+      label: "About",
+      href: "/about",
+      active: pathname === "/about" || pathname.startsWith("/about/"),
+    },
+    {
+      label: "Sponsor",
+      href: "/sponsor",
+      active: pathname === "/sponsor" || pathname.startsWith("/sponsor/"),
+    },
+  ]
 }
 
 export default function AppHeader() {

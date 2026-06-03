@@ -1,0 +1,124 @@
+---
+interface Props {
+  locale: string
+  limit?: number
+}
+
+const { locale, limit = 8 } = Astro.props
+
+const moduleMap = import.meta.glob("/src/content/docs/**/*.{md,mdx}", {
+  eager: true,
+})
+
+type DocModule = {
+  frontmatter: {
+    title?: string
+    description?: string
+    lastUpdated?: Date | string
+    draft?: boolean
+    category?: string
+    tags?: string[]
+    author?: string
+  }
+  url: string | undefined
+  file: string
+}
+
+const matchedDocs: DocModule[] = []
+
+for (const [path, mod] of Object.entries(moduleMap)) {
+  const doc = mod as DocModule
+  if (!doc.frontmatter) continue
+  if (doc.frontmatter.draft) continue
+
+  const url = doc.url ?? ""
+  const norm = path.replace(/\\/g, "/")
+
+  if (locale.toLowerCase() === "en") {
+    if (!norm.includes("/src/content/docs/en/")) continue
+    if (norm.includes("/src/content/docs/en/index.mdx")) continue
+    if (norm.endsWith("/src/content/docs/en/index.md")) continue
+  } else if (locale.toLowerCase() === "ja") {
+    if (!norm.includes("/src/content/docs/ja/")) continue
+    if (norm.includes("/src/content/docs/ja/index.mdx")) continue
+    if (norm.endsWith("/src/content/docs/ja/index.md")) continue
+  } else {
+    if (norm.includes("/src/content/docs/en/") || norm.includes("/src/content/docs/ja/")) continue
+    if (norm.includes("/src/content/docs/index.mdx") || norm.endsWith("/src/content/docs/index.md")) continue
+  }
+
+  if (!url || url === "") continue
+
+  matchedDocs.push({
+    frontmatter: doc.frontmatter,
+    url,
+    file: path,
+  })
+}
+
+matchedDocs.sort((a, b) => {
+  const dateA = a.frontmatter.lastUpdated
+    ? new Date(a.frontmatter.lastUpdated).getTime()
+    : 0
+  const dateB = b.frontmatter.lastUpdated
+    ? new Date(b.frontmatter.lastUpdated).getTime()
+    : 0
+  return dateB - dateA
+})
+
+const recentDocs = matchedDocs.slice(0, limit)
+---
+
+{
+  recentDocs.length === 0 ? (
+    <div class="not-content">
+      <p style={{ color: "var(--sl-color-gray-3)", fontStyle: "italic" }}>
+        暂无文档条目。请向对应分类目录添加 .mdx 或 .md 文件。
+      </p>
+    </div>
+  ) : (
+    <div class="not-content">
+      <ul style={{ listStyle: "none", padding: 0, display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+        {
+          recentDocs.map((doc) => {
+            const dateLabel = doc.frontmatter.lastUpdated
+              ? new Date(doc.frontmatter.lastUpdated).toLocaleDateString("zh-CN", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                })
+              : null
+            const catLabel = doc.frontmatter.category || ""
+
+            return (
+              <li
+                style={{
+                  borderLeft: "3px solid var(--sl-color-accent-low)",
+                  padding: "0.5rem 0 0.5rem 1rem",
+                  borderRadius: "0 4px 4px 0",
+                  background: "var(--sl-color-gray-7)",
+                }}
+              >
+                <a
+                  href={doc.url}
+                  style={{ textDecoration: "none", fontWeight: 600, fontSize: "1rem" }}
+                >
+                  {doc.frontmatter.title || "Untitled"}
+                </a>
+                <div style={{ display: "flex", gap: "1rem", marginTop: "0.25rem", fontSize: "0.8rem", color: "var(--sl-color-gray-3)" }}>
+                  {catLabel && <span>[{catLabel}]</span>}
+                  {dateLabel && <span>{dateLabel}</span>}
+                </div>
+                {doc.frontmatter.description && (
+                  <p style={{ margin: "0.25rem 0 0 0", fontSize: "0.85rem", color: "var(--sl-color-gray-2)" }}>
+                    {doc.frontmatter.description}
+                  </p>
+                )}
+              </li>
+            )
+          })
+        }
+      </ul>
+    </div>
+  )
+}

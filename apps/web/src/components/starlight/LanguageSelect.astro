@@ -1,0 +1,187 @@
+---
+import config from "virtual:starlight/user-config"
+import Icon from "@/components/common/Icon.astro"
+
+if (!config.isMultilingual || !config.locales) return null
+
+const currentLocale = Astro.locals.starlightRoute.locale || config.defaultLocale
+const currentPathname = Astro.url.pathname
+
+// 计算本地化路径 - 不依赖内部 API
+function getLocalizedPathname(locale: string | undefined): string {
+  if (!locale) return currentPathname
+
+  const segments = currentPathname.split("/").filter(Boolean)
+  const knownLocales = Object.keys(config.locales!)
+
+  // 如果当前路径以 locale 开头，替换它
+  if (segments.length > 0 && knownLocales.includes(segments[0])) {
+    segments[0] = locale
+    return "/" + segments.join("/")
+  }
+
+  // 否则添加 locale 前缀
+  return "/" + locale + currentPathname
+}
+
+const locales = Object.entries(config.locales!).map(([code, locale]) => ({
+  code,
+  label: locale!.label,
+  href: getLocalizedPathname(code),
+}))
+---
+
+<starlight-lang-select>
+  <div class="lang-wrapper">
+    <button
+      type="button"
+      class="lang-trigger"
+      aria-label="Select language"
+      aria-expanded="false"
+    >
+      <Icon name="globe" class="icon" size={16} />
+      <span class="label">{locales.find(l => l.code === currentLocale)?.label ?? "Language"}</span>
+      <Icon name="chevron-down" class="caret" size={14} />
+    </button>
+    <div class="lang-dropdown">
+      {locales.map((locale) => (
+        <a
+          href={locale.href}
+          class:list={["lang-option", { active: locale.code === currentLocale }]}
+        >
+          <span>{locale.label}</span>
+          {locale.code === currentLocale && (
+            <Icon name="check" size={14} />
+          )}
+        </a>
+      ))}
+    </div>
+  </div>
+</starlight-lang-select>
+
+<style>
+  .lang-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .lang-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 2.25rem;
+    padding: 0 0.75rem;
+    border-radius: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--sl-color-gray-2);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.2s, background-color 0.2s;
+  }
+
+  .lang-trigger:hover {
+    color: var(--sl-color-white);
+    background: var(--sl-color-gray-6);
+  }
+
+  .label {
+    display: none;
+  }
+
+  @media (min-width: 50rem) {
+    .label {
+      display: inline;
+    }
+  }
+
+  .caret {
+    transition: transform 0.2s;
+  }
+
+  .lang-trigger[aria-expanded="true"] .caret {
+    transform: rotate(180deg);
+  }
+
+  .lang-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 50;
+    margin-top: 0.5rem;
+    min-width: 8rem;
+    padding: 0.25rem;
+    border-radius: 1rem;
+    background: var(--sl-color-bg-nav);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.25rem);
+    transition: opacity 0.2s, transform 0.2s, visibility 0.2s;
+  }
+
+  .lang-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .lang-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--sl-color-gray-2);
+    text-decoration: none;
+    transition: background-color 0.15s;
+  }
+
+  .lang-option:hover {
+    background: var(--sl-color-gray-6);
+  }
+
+  .lang-option.active {
+    color: var(--sl-color-white);
+    background: var(--sl-color-gray-6);
+  }
+</style>
+
+<script>
+  class StarlightLanguageSelect extends HTMLElement {
+    constructor() {
+      super()
+      const trigger = this.querySelector(".lang-trigger")
+      const dropdown = this.querySelector(".lang-dropdown")
+
+      if (!trigger || !dropdown) return
+
+      const toggle = () => {
+        const isOpen = trigger.getAttribute("aria-expanded") === "true"
+        trigger.setAttribute("aria-expanded", (!isOpen).toString())
+        dropdown.classList.toggle("open", !isOpen)
+      }
+
+      const close = () => {
+        trigger.setAttribute("aria-expanded", "false")
+        dropdown.classList.remove("open")
+      }
+
+      trigger.addEventListener("click", toggle)
+
+      document.addEventListener("click", (e) => {
+        if (!this.contains(e.target as Node)) close()
+      })
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") close()
+      })
+    }
+  }
+
+  customElements.define("starlight-lang-select", StarlightLanguageSelect)
+</script>

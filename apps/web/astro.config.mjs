@@ -17,11 +17,11 @@ export default defineConfig({
       title: {
         en: "Sirra",
         ja: "シッラ",
-        "zh-CN": "Sirra",
+        zh_cn: "Sirra",
       },
-      defaultLocale: "zh-CN",
+      defaultLocale: "en",
       locales: {
-        "zh-CN": {
+        zh_cn: {
           label: "简体中文",
           lang: "zh-CN",
         },
@@ -33,6 +33,14 @@ export default defineConfig({
           label: "日本語",
           lang: "ja",
         },
+      },
+      customCss: [
+        "./src/styles/starlight.css",
+      ],
+      components: {
+        Header: "./src/components/starlight/Header.astro",
+        ThemeSelect: "./src/components/starlight/ThemeSelect.astro",
+        LanguageSelect: "./src/components/starlight/LanguageSelect.astro",
       },
     }),
   ],
