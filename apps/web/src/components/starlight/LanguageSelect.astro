@@ -79,11 +79,10 @@ const locales = Object.entries(config.locales!).map(([code, locale]) => ({
     background: transparent;
     border: none;
     cursor: pointer;
-    transition: color 0.2s, background-color 0.2s;
+    transition: background-color 0.15s;
   }
 
   .lang-trigger:hover {
-    color: var(--sl-color-white);
     background: var(--sl-color-gray-6);
   }
 

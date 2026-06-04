@@ -39,6 +39,7 @@ export default defineConfig({
       ],
       components: {
         Header: "./src/components/starlight/Header.astro",
+        Search: "./src/components/starlight/Search.astro",
         ThemeSelect: "./src/components/starlight/ThemeSelect.astro",
         LanguageSelect: "./src/components/starlight/LanguageSelect.astro",
       },

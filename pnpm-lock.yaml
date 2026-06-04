@@ -38,6 +38,9 @@ importers:
       '@astrojs/starlight-tailwind':
         specifier: ^5.0.0
         version: 5.0.0(@astrojs/starlight@0.39.2(astro@6.3.7(@types/node@25.9.1)(jiti@2.7.0)(lightningcss@1.32.0)(rollup@4.60.4)(yaml@2.9.0))(typescript@5.9.3))(tailwindcss@4.3.0)
+      '@pagefind/default-ui':
+        specifier: ^1.5.2
+        version: 1.5.2
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.15
