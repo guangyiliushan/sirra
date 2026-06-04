@@ -1,97 +1,224 @@
 ---
 import config from "virtual:starlight/user-config"
+import Icon from "@/components/common/Icon.astro"
 import Search from "./Search.astro"
 import SiteTitle from "@astrojs/starlight/components/SiteTitle.astro"
 import ThemeSelect from "./ThemeSelect.astro"
 import LanguageSelect from "./LanguageSelect.astro"
+
+const pathname = Astro.url.pathname
+
+const navItems = [
+  { label: "Home", href: "/", active: pathname === "/" },
+  {
+    label: "About",
+    href: "/about",
+    active: pathname === "/about" || pathname.startsWith("/about/"),
+  },
+  {
+    label: "Sponsor",
+    href: "/sponsor",
+    active: pathname === "/sponsor" || pathname.startsWith("/sponsor/"),
+  },
+]
 
 const shouldRenderSearch =
   config.pagefind || config.components.Search !== "@astrojs/starlight/components/Search.astro"
 ---
 
 <div class="header">
-	<div class="title-wrapper sl-flex">
-		<SiteTitle />
-	</div>
-	<div class="sl-flex print:hidden right-group">
-		{shouldRenderSearch && <Search />}
-		<div class="sl-hidden md:sl-flex desktop-actions">
-			<ThemeSelect />
-			<LanguageSelect />
-		</div>
-	</div>
+  <div class="left-group sl-flex">
+    <div class="title-wrapper sl-flex">
+      <SiteTitle />
+    </div>
+
+    <nav class="desktop-nav sl-hidden md:sl-flex">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={["nav-link", { active: item.active }]}
+          >
+            {item.label}
+            <span class:list={["nav-underline", { active: item.active }]} />
+          </a>
+        ))
+      }
+    </nav>
+  </div>
+
+  <div class="sl-flex print:hidden right-group">
+    <a href="/" class="home-btn" aria-label="Back to home">
+      <Icon name="home" size={16} />
+    </a>
+    {shouldRenderSearch && <Search />}
+    <div class="sl-hidden md:sl-flex desktop-actions">
+      <ThemeSelect />
+      <LanguageSelect />
+    </div>
+  </div>
 </div>
 
 <style>
-	/* 保留 Starlight 原有布局，调整以匹配 app-header 视觉风格 */
-	@layer starlight.core {
-		.header {
-			display: flex;
-			gap: var(--sl-nav-gap);
-			justify-content: space-between;
-			align-items: center;
-			height: 100%;
-			max-width: 80rem;
-			margin-inline: auto;
-		}
-		.title-wrapper {
-			overflow: clip;
-			padding: 0.25rem;
-			margin: -0.25rem;
-			min-width: 0;
-		}
-		.right-group {
-			gap: 0.5rem;
-			align-items: center;
-		}
-		.desktop-actions {
-			gap: 0.5rem;
-			align-items: center;
-		}
-		@media (min-width: 50rem) {
-			:global(:root[data-has-sidebar]) {
-				--__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
-			}
-			:global(:root:not([data-has-toc])) {
-				--__toc-width: 0rem;
-			}
-			.header {
-				--__sidebar-width: max(0rem, var(--sl-content-inline-start, 0rem) - var(--sl-nav-pad-x));
-				--__main-column-fr: calc(
-					(
-							100% + var(--__sidebar-pad, 0rem) - var(--__toc-width, var(--sl-sidebar-width)) -
-							(2 * var(--__toc-width, var(--sl-nav-pad-x))) - var(--sl-content-inline-start, 0rem) -
-							var(--sl-content-width)
-					) / 2
-				);
-				display: grid;
-				grid-template-columns:
-					minmax(
-						calc(var(--__sidebar-width) + max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))),
-						auto
-					)
-					1fr
-					auto;
-				align-content: center;
-			}
-			.right-group {
-				grid-column: 3;
-			}
-		}
-	}
+  @layer starlight.core {
+    .header {
+      display: flex;
+      gap: var(--sl-nav-gap);
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      max-width: 80rem;
+      margin-inline: auto;
+    }
 
-	/* 覆盖 PageFrame 外层 header 样式 - 匹配 app-header 毛玻璃效果 */
-	:global(.page > .header) {
-		--sl-nav-height: 4rem;
-		background-color: var(--sl-color-bg-nav);
-		-webkit-backdrop-filter: blur(16px);
-		backdrop-filter: blur(16px);
-		border-bottom-color: transparent;
-	}
-	:global([data-theme="dark"] .page > .header) {
-		background-color: oklch(0.145 0 0 / 0.6);
-	}
-	:global([data-theme="light"] .page > .header) {
-		background-color: oklch(1 0 0 / 0.6);
-	}
+    /* 左侧：SiteTitle + nav 靠左对齐 */
+    .left-group {
+      align-items: center;
+      gap: 1.5rem;
+      min-width: 0;
+    }
+    .title-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-shrink: 0;
+      font-weight: 600;
+      color: var(--sl-color-white);
+      text-decoration: none;
+      transition: opacity 0.15s;
+      overflow: clip;
+      padding: 0.25rem;
+      margin: -0.25rem;
+      min-width: 0;
+    }
+    .title-wrapper:hover {
+      opacity: 0.8;
+    }
+
+    /* 桌面导航栏 */
+    .desktop-nav {
+      display: none;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    @media (min-width: 50rem) {
+      .desktop-nav {
+        display: flex;
+      }
+    }
+
+    /* 普通链接 */
+    .nav-link {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      height: 2.25rem;
+      padding: 0 0.75rem;
+      border-radius: 1.5rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--sl-color-gray-2);
+      text-decoration: none;
+      transition: background-color 0.15s, color 0.15s;
+    }
+    .nav-link:hover {
+      background: var(--sl-color-gray-6);
+      color: var(--sl-color-white);
+    }
+    .nav-link.active {
+      background: var(--sl-color-gray-6);
+      color: var(--sl-color-white);
+    }
+    .nav-underline {
+      position: absolute;
+      right: 0.625rem;
+      bottom: 0.25rem;
+      left: 0.625rem;
+      height: 1px;
+      background: var(--sl-color-white);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+    .nav-link:hover .nav-underline,
+    .nav-underline.active {
+      transform: scaleX(1);
+    }
+
+    /* 右侧按钮组 */
+    .right-group {
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .desktop-actions {
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    /* 返回首页按钮 */
+    .home-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 1.5rem;
+      color: var(--sl-color-gray-2);
+      background: transparent;
+      text-decoration: none;
+      transition: background-color 0.15s;
+    }
+    .home-btn:hover {
+      background: var(--sl-color-gray-6);
+    }
+
+    @media (min-width: 50rem) {
+      :global(:root[data-has-sidebar]) {
+        --__sidebar-pad: calc(2 * var(--sl-nav-pad-x));
+      }
+      :global(:root:not([data-has-toc])) {
+        --__toc-width: 0rem;
+      }
+      .header {
+        --__sidebar-width: max(0rem, var(--sl-content-inline-start, 0rem) - var(--sl-nav-pad-x));
+        --__main-column-fr: calc(
+          (
+              100% + var(--__sidebar-pad, 0rem) - var(--__toc-width, var(--sl-sidebar-width)) -
+              (2 * var(--__toc-width, var(--sl-nav-pad-x))) - var(--sl-content-inline-start, 0rem) -
+              var(--sl-content-width)
+          ) / 2
+        );
+        display: grid;
+        grid-template-columns:
+          minmax(
+            calc(var(--__sidebar-width) + max(0rem, var(--__main-column-fr) - var(--sl-nav-gap))),
+            auto
+          )
+          1fr
+          auto;
+        align-content: center;
+      }
+      .left-group {
+        grid-column: 1;
+      }
+      .right-group {
+        grid-column: 3;
+      }
+    }
+  }
+
+  /* 覆盖 PageFrame 外层 header 样式 */
+  :global(.page > .header) {
+    --sl-nav-height: 4rem;
+    background-color: var(--sl-color-bg-nav);
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    border-bottom-color: transparent;
+  }
+  :global([data-theme="dark"] .page > .header) {
+    background-color: oklch(0.145 0 0 / 0.6);
+  }
+  :global([data-theme="light"] .page > .header) {
+    background-color: oklch(1 0 0 / 0.6);
+  }
 </style>
